@@ -14,6 +14,9 @@ class MapSprite(pygame.sprite.Sprite):
 
 
 class PhysicalMapSprite(MapSprite):
-    def __init__(self, image: pygame.Surface, x, y):
-        super().__init__(image, x, y)
-        
+    pass
+    # def __init__(self, image: pygame.Surface, x:int, y:int):
+    #     super().__init__(image, x, y)
+
+    # def check_collision(self, item):
+    #     self.rect.colliderect(item.get_rect())
