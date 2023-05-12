@@ -10,3 +10,8 @@ class Player(LiveObject):
     def jump(self):
         if self.sp_y == 0:
             self.set_speed_y(-8)
+
+
+img_a = pygame.Surface((20, 20))
+img_a.fill("blue")
+PLAYER = Player(img_a, 100, 100, 1)

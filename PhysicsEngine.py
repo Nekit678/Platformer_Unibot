@@ -1,9 +1,10 @@
-import pygame
 from typing import List
-
+from abc import abstractmethod, ABC
+import pygame
 from MapEngine import MapSprite
 
 
+# физические блоки карты (есть взаимодействие)
 class PhysicalMapSprite(MapSprite):
     def __init__(self, image: pygame.Surface, x: int, y: int):
         super().__init__(image, x, y)
@@ -15,6 +16,14 @@ class PhysicalMapSprite(MapSprite):
         return self.rect
 
 
+# то же самое, но еще есть какой-либо эффект
+class PhysicalEffectMapSprite(PhysicalMapSprite, ABC):
+    @abstractmethod
+    def activate_effect(self):
+        pass
+
+
+# нестатические физические объекты (по типу игрока, врагов и т.д)
 class PhysicsObject(pygame.sprite.Sprite):
     def __init__(self, image: pygame.Surface, x: int, y: int):
         super().__init__()
@@ -44,21 +53,21 @@ class PhysicsObject(pygame.sprite.Sprite):
         self.rect.x += self.sp_x
         self.rect.y += self.sp_y
 
-    def render(self, master: pygame.Surface):
-        master.blit(self.image, self.rect)
+    def render(self, master: pygame.Surface, c_x: int, c_y: int):
+        master.blit(self.image, (self.rect.x - c_x, self.rect.y - c_y))
 
 
-class PhysicsEngine:
+class PhysicsEngine:  # базовый физический движок
     GRAVITY = 0.35
     FrForceKoef = 0.3
 
     @staticmethod
-    def gravity(obj_items: List[PhysicsObject]):
+    def gravity(obj_items: List[PhysicsObject]):  # гравитация
         for obj in obj_items:
             obj.set_speed_y(obj.get_speed_y() + PhysicsEngine.GRAVITY)
 
     @staticmethod
-    def FrForceX(obj_items: List[PhysicsObject]):
+    def FrForceX(obj_items: List[PhysicsObject]):  # сила трения
         for obj in obj_items:
             if obj.get_speed_x() < 0:
                 obj.set_speed_x(obj.get_speed_x() + PhysicsEngine.FrForceKoef)
@@ -67,6 +76,14 @@ class PhysicsEngine:
                 obj.set_speed_x(obj.get_speed_x() - PhysicsEngine.FrForceKoef)
 
     @staticmethod
+    # активация эффектов блоков
+    def effect_collision(map_items: List[PhysicalEffectMapSprite], player: PhysicsObject):
+        for item in map_items:
+            if (item.get_rect().collidepoint(player.get_rect().bottomleft) or item.get_rect().collidepoint(player.get_rect().bottomright)):
+                item.activate_effect()
+
+    @staticmethod
+    # базовая проверка столкновений
     def map_collision(map_items: List[PhysicalMapSprite], obj_items: List[PhysicsObject]):
         for obj in obj_items:
             for item in map_items:
@@ -91,7 +108,7 @@ class PhysicsEngine:
                             obj.get_rect().bottom = item.get_rect().top
                             obj.set_speed_y(0)
 
-                    if abs(obj.get_rect().bottomleft[1] - item.get_rect().top) > 7:
+                    if abs(obj.get_rect().bottomleft[1] - item.get_rect().top) >= 7:
                         if obj.get_speed_x() < 0:
                             obj.get_rect().left = item.get_rect().right + 1
                             obj.set_speed_x(0)
@@ -102,7 +119,7 @@ class PhysicsEngine:
                             obj.get_rect().bottom = item.get_rect().top
                             obj.set_speed_y(0)
 
-                    if abs(obj.get_rect().bottomright[1] - item.get_rect().top) > 7:
+                    if abs(obj.get_rect().bottomright[1] - item.get_rect().top) >= 7:
                         if obj.get_speed_x() > 0:
                             obj.get_rect().right = item.get_rect().left - 1
                             obj.set_speed_x(0)
@@ -113,7 +130,7 @@ class PhysicsEngine:
                             obj.get_rect().top = item.get_rect().bottom
                             obj.set_speed_y(1)
 
-                    if abs(obj.get_rect().topleft[1] - item.get_rect().bottom) > 7:
+                    if abs(obj.get_rect().topleft[1] - item.get_rect().bottom) >= 7:
                         if obj.get_speed_x() < 0:
                             obj.get_rect().left = item.get_rect().right + 1
                             obj.set_speed_x(0)
@@ -124,7 +141,7 @@ class PhysicsEngine:
                             obj.get_rect().top = item.get_rect().bottom
                             obj.set_speed_y(1)
 
-                    if abs(obj.get_rect().topright[1] - item.get_rect().bottom) > 7:
+                    if abs(obj.get_rect().topright[1] - item.get_rect().bottom) >= 7:
                         if obj.get_speed_x() > 0:
                             obj.get_rect().right = item.get_rect().left - 1
                             obj.set_speed_x(0)
