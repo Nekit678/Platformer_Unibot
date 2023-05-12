@@ -9,4 +9,4 @@ class Player(LiveObject):
 
     def jump(self):
         if self.sp_y == 0:
-            self.set_speed_y(-10)
+            self.set_speed_y(-8)
