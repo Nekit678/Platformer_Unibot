@@ -1,1 +1,0 @@
-c_x: int, c_y: int

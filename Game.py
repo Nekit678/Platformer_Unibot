@@ -17,14 +17,15 @@ class Game:
 
     @staticmethod
     def player_control():
-        keys = pygame.key.get_pressed()
+        Game.player.set_direction("NULL")
 
+        keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            Game.player.set_speed_x(-3)
+            Game.player.set_direction("LEFT")
         if keys[pygame.K_RIGHT]:
-            Game.player.set_speed_x(3)
+            Game.player.set_direction("RIGHT")
         if keys[pygame.K_UP]:
-            Game.player.jump()
+            Game.player.set_direction("UP")
 
     @staticmethod
     def event_control():
@@ -35,7 +36,6 @@ class Game:
 
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
 camera = pygame.Rect(0, 0, WIDTH, HEIGHT)
 
 pygame.display.set_caption("Platformer ALPHA")
@@ -45,9 +45,10 @@ game = Game()
 
 
 def update():
+    Game.player.move()
     #! test gravity
     PhysicsEngine.gravity(game.level.physics_objects)
-    PhysicsEngine.FrForceX(game.level.physics_objects)
+    PhysicsEngine.FrForceX(game.level.physics_map, game.level.physics_objects)
 
     #! test collide
     PhysicsEngine.map_collision(game.level.physics_map, [game.player])

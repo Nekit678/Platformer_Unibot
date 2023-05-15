@@ -67,13 +67,20 @@ class PhysicsEngine:  # базовый физический движок
             obj.set_speed_y(obj.get_speed_y() + PhysicsEngine.GRAVITY)
 
     @staticmethod
-    def FrForceX(obj_items: List[PhysicsObject]):  # сила трения
+    def FrForceX(map_items: List[PhysicalMapSprite], obj_items: List[PhysicsObject]):  # сила трения
         for obj in obj_items:
-            if obj.get_speed_x() < 0:
-                obj.set_speed_x(obj.get_speed_x() + PhysicsEngine.FrForceKoef)
+            for item in map_items:
+                if (item.get_rect().collidepoint(obj.get_rect().bottomleft) and item.get_rect().collidepoint(obj.get_rect().bottomright)):
+                    if obj.get_speed_x() < 0:
+                        obj.set_speed_x(obj.get_speed_x() + PhysicsEngine.FrForceKoef)
+                        if obj.get_speed_x() > 0:
+                            obj.set_speed_x(0)
 
-            if obj.get_speed_x() > 0:
-                obj.set_speed_x(obj.get_speed_x() - PhysicsEngine.FrForceKoef)
+                    elif obj.get_speed_x() > 0:
+                        obj.set_speed_x(obj.get_speed_x() - PhysicsEngine.FrForceKoef)
+                        if obj.get_speed_x() < 0:
+                            obj.set_speed_x(0)
+                    break
 
     @staticmethod
     # активация эффектов блоков
