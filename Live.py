@@ -1,5 +1,4 @@
 import pygame
-
 from PhysicsEngine import PhysicsObject
 
 
@@ -8,5 +7,11 @@ class LiveObject(PhysicsObject):
         super().__init__(image, x, y)
         self.health = HP
 
-    def damage(self):
-        self.health -= 1
+    def damage(self, dmg: int):
+        self.health -= dmg
+
+    def kill(self):
+        self.health = 0
+
+    def get_health(self):
+        return self.health
