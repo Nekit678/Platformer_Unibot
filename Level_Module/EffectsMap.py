@@ -1,20 +1,12 @@
-from abc import ABC, abstractmethod
 import pygame
-from PhysicsEngine import PhysicalMapSprite
-from Player import Player
-
-
-class PhysicalEffectMapSprite(PhysicalMapSprite, ABC):
-    @abstractmethod
-    def activate_effect(self, player: Player):
-        pass
+from GameEngine_Module.GameEngineModels import PhysicalEffectMapSprite
 
 
 class JumpBlock(PhysicalEffectMapSprite):
     def __init__(self, x: int, y: int):
         super().__init__(jump_block_img, x, y)
 
-    def activate_effect(self, player: Player):
+    def activate_effect(self, player):
         player.set_speed_y(-15)
 
 
@@ -23,7 +15,7 @@ class GravityBlock(PhysicalEffectMapSprite):
     def __init__(self, x: int, y: int):
         super().__init__(gravity_block_img, x, y)
 
-    def activate_effect(self, player: Player):
+    def activate_effect(self, player):
         player.set_speed_y(0)
 
 
@@ -32,7 +24,7 @@ class SpeedBlock(PhysicalEffectMapSprite):
     def __init__(self, x: int, y: int):
         super().__init__(speed_block_img, x, y)
 
-    def activate_effect(self, player: Player):
+    def activate_effect(self, player):
         for direction in player.get_directions():
             if direction == "RIGHT":
                 player.set_speed_x(7)
@@ -45,7 +37,7 @@ class SlowBlock(PhysicalEffectMapSprite):
     def __init__(self, x: int, y: int):
         super().__init__(slow_block_img, x, y)
 
-    def activate_effect(self, player: Player):
+    def activate_effect(self, player):
         for direction in player.get_directions():
             if direction == "RIGHT":
                 player.set_speed_x(1)
@@ -57,7 +49,7 @@ class KillBlock(PhysicalEffectMapSprite):
     def __init__(self, x: int, y: int):
         super().__init__(slow_block_img, x, y)
 
-    def activate_effect(self, player: Player):
+    def activate_effect(self, player):
         player.kill()
 
 
@@ -66,7 +58,7 @@ class DamageBlock(PhysicalEffectMapSprite):
         super().__init__(slow_block_img, x, y)
         self.count = 1
 
-    def activate_effect(self, player: Player):
+    def activate_effect(self, player):
         if self.count == 1:
             player.damage(1)
             self.count = 0
