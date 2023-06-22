@@ -9,6 +9,14 @@ class PhysicsEngine:  # базовый физический движок
     FrForceKoef = 0.3
 
     @staticmethod
+    def check_fall(obj: PhysicsObject) -> bool:
+        y = obj.get_rect().y
+        if y > 200:
+            return True
+        return False
+        
+
+    @staticmethod
     def check_bottom_collision(obj, player: PhysicsObject):
         if (obj.get_rect().collidepoint(player.get_rect().bottomleft) or obj.get_rect().collidepoint(player.get_rect().bottomright)):
             return True
@@ -23,7 +31,8 @@ class PhysicsEngine:  # базовый физический движок
     @staticmethod
     def gravity(obj_items: List[PhysicsObject]):  # гравитация
         for obj in obj_items:
-            obj.set_speed_y(obj.get_speed_y() + PhysicsEngine.GRAVITY)
+            if obj.get_speed_y() < 15:
+                obj.set_speed_y(obj.get_speed_y() + PhysicsEngine.GRAVITY)
 
     @staticmethod
     # сила трения

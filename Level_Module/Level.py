@@ -4,10 +4,6 @@ from GameEngine_Module.GameEngineModels import Enemy, PhysicalEffectMapSprite
 from PhysicsEngine_Module.PhysicsEngineModels import PhysicalMapSprite
 from Map_Module.MapEngine import MapSprite
 from Level_Module.Player import Player
-from Level_Module.EffectsMap import SpeedBlock
-from Level_Module.Enemies import TestEnemy
-from Level_Module.PhysicsMap import CommonBlock
-
 
 
 class Level:
@@ -19,6 +15,49 @@ class Level:
     map_sprite: List[MapSprite] = []
     physics_map: List[PhysicalMapSprite] = []
     physics_effect_map: List[PhysicalEffectMapSprite] = []
+
+    @staticmethod
+    def set_player(player: Player):
+        Level.player = player
+
+    @staticmethod
+    def add_enemy(enemy: Enemy):
+        Level.enemies.append(enemy)
+
+    @staticmethod
+    def add_bonus(bonus):
+        Level.bonuses.append(bonus)
+
+    @staticmethod
+    def add_complete_block(block: PhysicalMapSprite):
+        Level.complete_blocks.append(block)
+
+    @staticmethod
+    def add_edge_block(block: PhysicalMapSprite):
+        Level.edge_blocks.append(block)
+
+    @staticmethod
+    def add_map_sprite_block(block: MapSprite):
+        Level.map_sprite.append(block)
+
+    @staticmethod
+    def add_physics_map_block(block: PhysicalMapSprite):
+        Level.physics_map.append(block)
+
+    @staticmethod
+    def add_physics_effect_map_block(block: PhysicalEffectMapSprite):
+        Level.physics_effect_map.append(block)
+
+    @staticmethod
+    def clear_level():
+        Level.player = None
+        Level.enemies = []
+        Level.bonuses = []
+        Level.complete_blocks = []
+        Level.edge_blocks = []
+        Level.map_sprite = []
+        Level.physics_map = []
+        Level.physics_effect_map = []
 
     @staticmethod
     def get_enemies():
@@ -51,30 +90,3 @@ class Level:
     @staticmethod
     def get_edge_blocks():
         return Level.edge_blocks
-
-    @staticmethod
-    #!тут будет парсинг файла с уровнем
-    def create_level(lvl_file_path: str):
-        # with open(lvl_file_path, 'r', encoding="UTF-8") as lvl_file:
-        #     for line in lvl_file:
-        #         param = line.split(sep=" ")
-
-        Level.enemies.append(TestEnemy(640, 350))
-        # Level.bonuses.append()
-        Level.player = Player(100, 100, 1)
-
-        # Level.physics_effect_map.append(JumpBlock(32*4, 500-32))
-        # Level.physics_effect_map.append(JumpBlock(0, 0))
-        for i in range(32*7, 32*15, 32):
-            Level.physics_effect_map.append(SpeedBlock(i, 500-32))
-
-        for i in range(32*20, 32*24, 32):
-            Level.physics_effect_map.append(SpeedBlock(i, 500-32))
-
-        for i in range(0, 10000, 32):
-            Level.physics_map.append(CommonBlock(i, 500))
-
-        for i in range(32*30, 32*40, 32):
-            Level.physics_effect_map.append(SpeedBlock(i, 500-32))
-
-Level.create_level("")

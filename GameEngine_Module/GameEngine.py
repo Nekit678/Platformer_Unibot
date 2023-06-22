@@ -7,7 +7,10 @@ from PhysicsEngine_Module.PhysicsEngine import PhysicsEngine
 class GameEngine:
     gameover = False
     complete  = False
-    menu = False
+    menu = True
+
+    # @staticmethod
+    # def 
 
     @staticmethod
     def get_status():
@@ -48,6 +51,14 @@ class GameEngine:
                     Level.get_player().set_speed_y(-10)
                 else:
                     Level.get_player().kill()
+        
+        #!test check fall objects
+        for obj in [Level.get_player(), *Level.get_enemies()]:
+            if PhysicsEngine.check_fall(obj):
+                obj.kill()
+        for bonus in Level.get_bonuses():
+            if PhysicsEngine.check_fall(bonus):
+                Level.get_bonuses().remove(bonus)
 
     @staticmethod
     def check_live_player():
@@ -65,15 +76,6 @@ class GameEngine:
         for item in Level.get_complete_blocks():
             if PhysicsEngine.check_bottom_collision(item, Level.get_player()):
                 GameEngine.complete = True
-
-    @staticmethod
-    def check_edge():
-        for item in Level.get_edge_blocks():
-            if PhysicsEngine.check_rect_collision(item, Level.get_player()):
-                Level.get_player().kill()
-            for en in Level.get_enemies():
-                if PhysicsEngine.check_rect_collision(item, en):
-                    en.kill()
 
     @staticmethod
     def update_game():

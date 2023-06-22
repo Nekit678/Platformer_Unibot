@@ -21,24 +21,37 @@ while True:
     screen.fill("black")
     clock.tick(FPS)
 
+    complete, gameover, menu = GameEngine.get_status()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-    complete, gameover, menu = GameEngine.get_status()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                GameEngine.menu = True
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                if menu:
+                    if Menu.check_collision(event.pos):
+                        GameEngine.menu = False
 
     if menu:
         Menu.update()
-        Menu.check_collision()
         Menu.render(screen)
     else:
         GameEngine.player_control(pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP)
         GameEngine.update_game()
         GameEngine.render_game(screen, camera)
 
+    if complete:
+        GameEngine.menu = True
+        GameEngine.complete = False
+
     if gameover:
-        pygame.quit()
-        sys.exit()
+        GameEngine.gameover = False
+        GameEngine.menu = True
 
     pygame.display.update()
