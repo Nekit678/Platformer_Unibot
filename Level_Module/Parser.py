@@ -3,7 +3,7 @@ import os
 
 from Level_Module.EffectsMap import DamageBlock, GravityBlock, KillBlock, SlowBlock, SpeedBlock, JumpBlock
 from Level_Module.Level import Level
-from Level_Module.PhysicsMap import CommonBlock
+from Level_Module.PhysicsMap import CommonBlock, CompleteBlock
 from Level_Module.Player import Player
 
 types_id = {
@@ -18,14 +18,15 @@ types_id = {
 }
 
 items_id = {
-    0: Player,
-    1: GravityBlock,
-    2: SpeedBlock,
-    3: SlowBlock,
-    4: KillBlock,
-    5: DamageBlock,
-    6: CommonBlock,
-    7: JumpBlock
+    0: (Player, 0),
+    1: (GravityBlock, 7),
+    2: (SpeedBlock, 7),
+    3: (SlowBlock, 7),
+    4: (KillBlock, 7),
+    5: (DamageBlock, 7),
+    6: (CommonBlock, 6),
+    7: (JumpBlock, 7),
+    8: (CompleteBlock, 3)
 }
 
 
@@ -46,10 +47,9 @@ class Parser:
             for line in lvl_file:
                 item = line.replace("\n", "")
                 info = item.split(sep=" ")
-                item_type = int(info[0])
-                item_id = int(info[1])
+                item_id = int(info[0])
                 item_args = []
-                for arg in info[2:]:
+                for arg in info[1:]:
                     item_args.append(int(arg))
-                print(item_type, item_id, item_args)
-                types_id[item_type](items_id[item_id](*item_args))
+                t_id = items_id[item_id][1]
+                types_id[t_id](items_id[item_id][0](*item_args))

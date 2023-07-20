@@ -6,15 +6,15 @@ from PhysicsEngine_Module.PhysicsEngine import PhysicsEngine
 
 class GameEngine:
     gameover = False
-    complete  = False
+    complete = False
     menu = True
 
     # @staticmethod
-    # def 
+    # def
 
     @staticmethod
     def get_status():
-        return GameEngine.complete,GameEngine.gameover,GameEngine.menu
+        return GameEngine.complete, GameEngine.gameover, GameEngine.menu
 
     @staticmethod
     def player_control(left_b: int, right_b: int, up_b: int):
@@ -36,7 +36,7 @@ class GameEngine:
 
         #! test collide
         PhysicsEngine.map_collision(
-            [*Level.get_physics_map(), *Level.get_physics_effect_map()], [Level.get_player(), *Level.get_enemies()])
+            [*Level.get_physics_map(), *Level.get_physics_effect_map(), *Level.get_complete_blocks()], [Level.get_player(), *Level.get_enemies()])
 
         #!test effect
         for item in Level.get_physics_effect_map():
@@ -51,7 +51,7 @@ class GameEngine:
                     Level.get_player().set_speed_y(-10)
                 else:
                     Level.get_player().kill()
-        
+
         #!test check fall objects
         for obj in [Level.get_player(), *Level.get_enemies()]:
             if PhysicsEngine.check_fall(obj):
@@ -59,6 +59,11 @@ class GameEngine:
         for bonus in Level.get_bonuses():
             if PhysicsEngine.check_fall(bonus):
                 Level.get_bonuses().remove(bonus)
+
+        #!test collide with CompleteBlock
+        for item in Level.get_complete_blocks():
+            if PhysicsEngine.check_bottom_collision(item, Level.get_player()):
+                GameEngine.complete = True
 
     @staticmethod
     def check_live_player():
@@ -71,11 +76,6 @@ class GameEngine:
             if en.get_health() <= 0:
                 Level.get_enemies().remove(en)
 
-    @staticmethod
-    def check_complete_level():
-        for item in Level.get_complete_blocks():
-            if PhysicsEngine.check_bottom_collision(item, Level.get_player()):
-                GameEngine.complete = True
 
     @staticmethod
     def update_game():
@@ -95,5 +95,5 @@ class GameEngine:
         camera.x = Level.get_player().get_rect().x - camera.width/(13)
         camera.y = Level.get_player().get_rect().y-camera.height/(1.5)
 
-        for i in [*Level.get_physics_map(), *Level.get_physics_effect_map(), Level.get_player(), *Level.get_enemies()]:
+        for i in [*Level.get_physics_map(), *Level.get_complete_blocks(), *Level.get_physics_effect_map(), Level.get_player(), *Level.get_enemies()]:
             i.render(screen, camera.x, camera.y)
