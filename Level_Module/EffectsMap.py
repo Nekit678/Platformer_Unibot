@@ -47,7 +47,7 @@ class SlowBlock(PhysicalEffectMapSprite):
 
 class KillBlock(PhysicalEffectMapSprite):
     def __init__(self, x: int, y: int):
-        super().__init__(slow_block_img, x, y)
+        super().__init__(kill_block_img, x, y)
 
     def activate_effect(self, player):
         player.kill()
@@ -55,7 +55,7 @@ class KillBlock(PhysicalEffectMapSprite):
 
 class DamageBlock(PhysicalEffectMapSprite):
     def __init__(self, x: int, y: int):
-        super().__init__(slow_block_img, x, y)
+        super().__init__(damage_block_img, x, y)
         self.count = 1
 
     def activate_effect(self, player):
@@ -64,17 +64,9 @@ class DamageBlock(PhysicalEffectMapSprite):
             self.count = 0
 
 
-jump_block_img = pygame.Surface((50, 50))
-jump_block_img.fill("green")
-
-gravity_block_img = pygame.Surface((50, 50))
-gravity_block_img.fill("blue")
-
-speed_block_img = pygame.Surface((50, 50))
-speed_block_img.fill("orange")
-
-slow_block_img = pygame.Surface((50, 50))
-slow_block_img.fill("orange")
-
-edge_block_img = pygame.Surface((50, 50))
-edge_block_img.fill("red")
+jump_block_img = pygame.image.load("images/jump_block.png")
+gravity_block_img = pygame.image.load("images/gravity_block.png")
+speed_block_img = pygame.image.load("images/speed_block.png")
+slow_block_img = pygame.image.load("images/slow_block.png")
+damage_block_img = pygame.image.load("images/damage_block.png")
+kill_block_img = pygame.image.load("images/kill_block.png")

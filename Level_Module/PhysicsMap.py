@@ -8,10 +8,6 @@ class CommonBlock(PhysicalMapSprite):
     def __init__(self, x: int, y: int):
         super().__init__(common_block_img, x, y)
 
-
-common_block_img = pygame.Surface((50, 50))
-common_block_img.fill("gray")
-
 ###################### особые блоки ###########################
 
 
@@ -25,5 +21,5 @@ class EdgeBlock(PhysicalMapSprite):
         super().__init__(complete_block_img, x, y)
 
 
-complete_block_img = pygame.Surface((50, 50))
-complete_block_img.fill("green")
+complete_block_img = pygame.image.load("images/complete_block.png")
+common_block_img = pygame.image.load("images/common_block.png")

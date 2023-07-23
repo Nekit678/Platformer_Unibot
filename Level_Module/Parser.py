@@ -2,6 +2,7 @@ from typing import List
 import os
 
 from Level_Module.EffectsMap import DamageBlock, GravityBlock, KillBlock, SlowBlock, SpeedBlock, JumpBlock
+from Level_Module.Enemies import TestEnemy
 from Level_Module.Level import Level
 from Level_Module.PhysicsMap import CommonBlock, CompleteBlock
 from Level_Module.Player import Player
@@ -26,7 +27,8 @@ items_id = {
     5: (DamageBlock, 7),
     6: (CommonBlock, 6),
     7: (JumpBlock, 7),
-    8: (CompleteBlock, 3)
+    8: (CompleteBlock, 3),
+    9: (TestEnemy, 1)
 }
 
 

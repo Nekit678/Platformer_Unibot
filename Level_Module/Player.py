@@ -7,5 +7,4 @@ class Player(GameEngine_Module.GameEngineModels.Player):
         super().__init__(player_img, x, y, HP)
 
 
-player_img = pygame.Surface((20, 20))
-player_img.fill("blue")
+player_img = pygame.image.load("images/player.png")
