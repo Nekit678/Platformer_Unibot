@@ -29,31 +29,56 @@ class GameEngine:
 
     @staticmethod
     def update_physics_engine():
+        #! Optimization
+        enemies = Level.get_enemies()
+        player = Level.get_player()
+        physics_map = []
+        physics_effect_map = []
+        complete_blocks = []
+
+        for item in Level.get_physics_map():
+            for live in [*enemies, player]:
+                if pygame.Rect(live.get_rect().x, live.get_rect().y, 25, 28).colliderect(item.get_rect()):
+                    physics_map.append(item)
+                    break
+
+        for item in Level.get_physics_effect_map():
+            for live in [*enemies, player]:
+                if pygame.Rect(live.get_rect().x, live.get_rect().y, 25, 28).colliderect(item.get_rect()):
+                    physics_effect_map.append(item)
+                    break
+
+        for item in Level.get_complete_blocks():
+            for live in [*enemies, player]:
+                if pygame.Rect(live.get_rect().x, live.get_rect().y, 25, 28).colliderect(item.get_rect()):
+                    complete_blocks.append(item)
+                    break
+
         #! test gravity
-        PhysicsEngine.gravity([Level.get_player(), *Level.get_enemies()])
+        PhysicsEngine.gravity([player, *enemies])
         PhysicsEngine.FrForceX(
-            [*Level.get_physics_map(), *Level.get_physics_effect_map()], [Level.get_player()])
+            [*physics_map, *physics_effect_map], [player])
 
         #! test collide
         PhysicsEngine.map_collision(
-            [*Level.get_physics_map(), *Level.get_physics_effect_map(), *Level.get_complete_blocks()], [Level.get_player(), *Level.get_enemies()])
+            [*physics_map, *physics_effect_map, *complete_blocks], [player, *enemies])
 
         #!test effect
-        for item in Level.get_physics_effect_map():
-            if PhysicsEngine.check_bottom_collision(item, Level.get_player()):
-                item.activate_effect(Level.get_player())
+        for item in physics_effect_map:
+            if PhysicsEngine.check_bottom_collision(item, player):
+                item.activate_effect(player)
 
         #!test collide player-enemy
-        for en in Level.get_enemies():
-            if PhysicsEngine.check_rect_collision(en, Level.get_player()):
-                if PhysicsEngine.check_bottom_collision(en, Level.get_player()) and Level.get_player().get_speed_y() > 0:
+        for en in enemies:
+            if PhysicsEngine.check_rect_collision(en, player):
+                if PhysicsEngine.check_bottom_collision(en, player) and player.get_speed_y() > 0:
                     en.damage(1)
-                    Level.get_player().set_speed_y(-10)
+                    player.set_speed_y(-10)
                 else:
-                    Level.get_player().kill()
+                    player.kill()
 
         #!test check fall objects
-        for obj in [Level.get_player(), *Level.get_enemies()]:
+        for obj in [player, *enemies]:
             if PhysicsEngine.check_fall(obj):
                 obj.kill()
         for bonus in Level.get_bonuses():
@@ -61,8 +86,8 @@ class GameEngine:
                 Level.get_bonuses().remove(bonus)
 
         #!test collide with CompleteBlock
-        for item in Level.get_complete_blocks():
-            if PhysicsEngine.check_bottom_collision(item, Level.get_player()):
+        for item in complete_blocks:
+            if PhysicsEngine.check_bottom_collision(item, player):
                 GameEngine.complete = True
 
     @staticmethod
@@ -75,7 +100,6 @@ class GameEngine:
         for en in Level.get_enemies():
             if en.get_health() <= 0:
                 Level.get_enemies().remove(en)
-
 
     @staticmethod
     def update_game():
